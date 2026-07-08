@@ -1,21 +1,37 @@
 import Link from "next/link";
 
+import { QR_TYPE_ICONS } from "@/lib/qr/icons";
 import { QR_TYPES, QR_TYPE_LABELS } from "@/lib/qr/types";
 
 export default function GenerateIndexPage() {
   return (
-    <div className="mx-auto flex max-w-2xl flex-col gap-6 px-6 py-16">
-      <h1 className="text-2xl font-semibold">Ne tür bir QR kod oluşturmak istersin?</h1>
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {QR_TYPES.map((type) => (
-          <Link
-            key={type}
-            href={`/generate/${type}`}
-            className="rounded-lg border border-gray-200 px-4 py-6 text-center text-sm font-medium hover:border-gray-400 dark:border-gray-700 dark:hover:border-gray-500"
-          >
-            {QR_TYPE_LABELS[type]}
-          </Link>
-        ))}
+    <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-8 px-6 py-16">
+      <div className="flex flex-col gap-2 text-center">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-50">
+          Ne tür bir QR kod oluşturmak istersin?
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Bir tür seç, formu doldur, QR kodun anında oluşsun.
+        </p>
+      </div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        {QR_TYPES.map((type) => {
+          const Icon = QR_TYPE_ICONS[type];
+          return (
+            <Link
+              key={type}
+              href={`/generate/${type}`}
+              className="group flex flex-col items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-6 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-indigo-300 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 dark:hover:border-indigo-700"
+            >
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-50 text-indigo-600 transition-colors group-hover:bg-indigo-100 dark:bg-indigo-950 dark:text-indigo-400 dark:group-hover:bg-indigo-900">
+                <Icon className="h-5 w-5" />
+              </span>
+              <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                {QR_TYPE_LABELS[type]}
+              </span>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

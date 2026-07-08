@@ -22,7 +22,7 @@ type GeneratorFormProps = {
 };
 
 const fieldClass =
-  "w-full rounded-md border border-gray-300 px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900";
+  "w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 dark:border-gray-700 dark:bg-gray-950 dark:focus:border-indigo-500";
 const labelClass = "text-sm font-medium text-gray-700 dark:text-gray-300";
 
 export function GeneratorForm({ type, onDataChange }: GeneratorFormProps) {
