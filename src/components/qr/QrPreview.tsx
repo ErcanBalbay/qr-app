@@ -3,11 +3,14 @@
 import { useEffect, useRef } from "react";
 import type QRCodeStyling from "qr-code-styling";
 
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+
 type QrPreviewProps = {
   data: string;
 };
 
 export function QrPreview({ data }: QrPreviewProps) {
+  const { t } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const qrRef = useRef<QRCodeStyling | null>(null);
 
@@ -54,15 +57,13 @@ export function QrPreview({ data }: QrPreviewProps) {
   return (
     <div className="flex flex-col items-center gap-4">
       <span className="self-start text-sm font-medium text-gray-700 dark:text-gray-300">
-        Önizleme
+        {t.preview.label}
       </span>
       <div className="flex h-[272px] w-[272px] items-center justify-center rounded-lg border border-dashed border-gray-300 p-4 dark:border-gray-700">
         {data ? (
           <div ref={containerRef} />
         ) : (
-          <p className="text-center text-xs text-gray-400">
-            Formu doldurunca QR kodun burada görünecek
-          </p>
+          <p className="text-center text-xs text-gray-400">{t.preview.placeholder}</p>
         )}
       </div>
       <div className="flex gap-2">
@@ -72,7 +73,7 @@ export function QrPreview({ data }: QrPreviewProps) {
           disabled={!data}
           className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition-colors hover:bg-indigo-500 disabled:opacity-40 disabled:hover:bg-indigo-600"
         >
-          PNG indir
+          {t.preview.downloadPng}
         </button>
         <button
           type="button"
@@ -80,7 +81,7 @@ export function QrPreview({ data }: QrPreviewProps) {
           disabled={!data}
           className="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium transition-colors hover:border-indigo-400 hover:text-indigo-600 disabled:opacity-40 disabled:hover:border-gray-300 disabled:hover:text-current dark:border-gray-600"
         >
-          SVG indir
+          {t.preview.downloadSvg}
         </button>
       </div>
     </div>

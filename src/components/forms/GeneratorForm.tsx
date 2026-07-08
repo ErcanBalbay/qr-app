@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -13,8 +14,12 @@ import {
   buildVcardPayload,
   buildWifiPayload,
 } from "@/lib/qr/builders";
-import { qrSchemas } from "@/lib/qr/schemas";
+import { useLanguage } from "@/lib/i18n/LanguageContext";
+import type { Language, translations } from "@/lib/i18n/translations";
+import { createQrSchemas } from "@/lib/qr/schemas";
 import type { QrType } from "@/lib/qr/types";
+
+type Translation = (typeof translations)[Language];
 
 type GeneratorFormProps = {
   type: QrType;
@@ -26,7 +31,10 @@ const fieldClass =
 const labelClass = "text-sm font-medium text-gray-700 dark:text-gray-300";
 
 export function GeneratorForm({ type, onDataChange }: GeneratorFormProps) {
-  const schema = qrSchemas[type];
+  const { t } = useLanguage();
+  const schemas = useMemo(() => createQrSchemas(t), [t]);
+  const schema = schemas[type];
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const form = useForm<any>({
     resolver: zodResolver(schema as never),
@@ -52,7 +60,7 @@ export function GeneratorForm({ type, onDataChange }: GeneratorFormProps) {
       onChange={submitAndBuild}
       onBlur={submitAndBuild}
     >
-      {renderFields(type, form)}
+      {renderFields(type, form, t)}
     </form>
   );
 }
@@ -96,40 +104,45 @@ function buildPayload(type: QrType, data: any): string {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function renderFields(type: QrType, form: ReturnType<typeof useForm<any>>) {
+function renderFields(
+  type: QrType,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  form: ReturnType<typeof useForm<any>>,
+  t: Translation,
+) {
   const { register, formState } = form;
   const errors = formState.errors;
+  const f = t.forms;
 
   switch (type) {
     case "url":
       return (
-        <Field label="URL" error={errors.url?.message as string}>
-          <input {...register("url")} className={fieldClass} placeholder="https://ornek.com" />
+        <Field label={f.url.label} error={errors.url?.message as string}>
+          <input {...register("url")} className={fieldClass} placeholder={f.url.placeholder} />
         </Field>
       );
     case "text":
       return (
-        <Field label="Metin" error={errors.text?.message as string}>
-          <textarea {...register("text")} className={fieldClass} rows={4} placeholder="Metninizi girin" />
+        <Field label={f.text.label} error={errors.text?.message as string}>
+          <textarea {...register("text")} className={fieldClass} rows={4} placeholder={f.text.placeholder} />
         </Field>
       );
     case "vcard":
       return (
         <>
-          <Field label="Ad" error={errors.firstName?.message as string}>
+          <Field label={f.vcard.firstName} error={errors.firstName?.message as string}>
             <input {...register("firstName")} className={fieldClass} />
           </Field>
-          <Field label="Soyad">
+          <Field label={f.vcard.lastName}>
             <input {...register("lastName")} className={fieldClass} />
           </Field>
-          <Field label="Telefon">
+          <Field label={f.vcard.phone}>
             <input {...register("phone")} className={fieldClass} />
           </Field>
-          <Field label="E-posta" error={errors.email?.message as string}>
+          <Field label={f.vcard.email} error={errors.email?.message as string}>
             <input {...register("email")} className={fieldClass} />
           </Field>
-          <Field label="Şirket">
+          <Field label={f.vcard.company}>
             <input {...register("company")} className={fieldClass} />
           </Field>
         </>
@@ -137,35 +150,35 @@ function renderFields(type: QrType, form: ReturnType<typeof useForm<any>>) {
     case "wifi":
       return (
         <>
-          <Field label="Ağ Adı (SSID)" error={errors.ssid?.message as string}>
+          <Field label={f.wifi.ssid} error={errors.ssid?.message as string}>
             <input {...register("ssid")} className={fieldClass} />
           </Field>
-          <Field label="Şifre">
+          <Field label={f.wifi.password}>
             <input {...register("password")} className={fieldClass} />
           </Field>
-          <Field label="Güvenlik">
+          <Field label={f.wifi.security}>
             <select {...register("security")} className={fieldClass}>
-              <option value="WPA">WPA/WPA2</option>
-              <option value="WEP">WEP</option>
-              <option value="nopass">Şifresiz</option>
+              <option value="WPA">{f.wifi.wpa}</option>
+              <option value="WEP">{f.wifi.wep}</option>
+              <option value="nopass">{f.wifi.nopass}</option>
             </select>
           </Field>
           <label className="flex items-center gap-2 text-sm">
             <input type="checkbox" {...register("hidden")} />
-            Gizli ağ
+            {f.wifi.hidden}
           </label>
         </>
       );
     case "email":
       return (
         <>
-          <Field label="Alıcı e-posta" error={errors.to?.message as string}>
+          <Field label={f.email.to} error={errors.to?.message as string}>
             <input {...register("to")} className={fieldClass} />
           </Field>
-          <Field label="Konu">
+          <Field label={f.email.subject}>
             <input {...register("subject")} className={fieldClass} />
           </Field>
-          <Field label="Mesaj">
+          <Field label={f.email.body}>
             <textarea {...register("body")} className={fieldClass} rows={3} />
           </Field>
         </>
@@ -173,27 +186,27 @@ function renderFields(type: QrType, form: ReturnType<typeof useForm<any>>) {
     case "sms":
       return (
         <>
-          <Field label="Telefon numarası" error={errors.phone?.message as string}>
+          <Field label={f.sms.phone} error={errors.phone?.message as string}>
             <input {...register("phone")} className={fieldClass} />
           </Field>
-          <Field label="Mesaj">
+          <Field label={f.sms.message}>
             <textarea {...register("message")} className={fieldClass} rows={3} />
           </Field>
         </>
       );
     case "tel":
       return (
-        <Field label="Telefon numarası" error={errors.phone?.message as string}>
+        <Field label={f.tel.phone} error={errors.phone?.message as string}>
           <input {...register("phone")} className={fieldClass} />
         </Field>
       );
     case "geo":
       return (
         <>
-          <Field label="Enlem" error={errors.latitude?.message as string}>
+          <Field label={f.geo.latitude} error={errors.latitude?.message as string}>
             <input {...register("latitude")} className={fieldClass} placeholder="41.0082" />
           </Field>
-          <Field label="Boylam" error={errors.longitude?.message as string}>
+          <Field label={f.geo.longitude} error={errors.longitude?.message as string}>
             <input {...register("longitude")} className={fieldClass} placeholder="28.9784" />
           </Field>
         </>

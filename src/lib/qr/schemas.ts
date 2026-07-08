@@ -1,64 +1,71 @@
 import { z } from "zod";
 
-export const urlSchema = z.object({
-  url: z.string().url("Geçerli bir URL girin (https:// ile başlamalı)"),
-});
+import type { Language, translations } from "@/lib/i18n/translations";
 
-export const textSchema = z.object({
-  text: z.string().min(1, "Metin boş olamaz"),
-});
+type Translation = (typeof translations)[Language];
 
-export const vcardSchema = z.object({
-  firstName: z.string().min(1, "Ad gerekli"),
-  lastName: z.string().optional(),
-  phone: z.string().optional(),
-  email: z.string().email("Geçerli bir e-posta girin").optional().or(z.literal("")),
-  company: z.string().optional(),
-});
+export function createQrSchemas(t: Translation) {
+  const urlSchema = z.object({
+    url: z.string().url(t.forms.url.error),
+  });
 
-export const wifiSchema = z.object({
-  ssid: z.string().min(1, "Ağ adı (SSID) gerekli"),
-  password: z.string().optional(),
-  security: z.enum(["WPA", "WEP", "nopass"]),
-  hidden: z.boolean(),
-});
+  const textSchema = z.object({
+    text: z.string().min(1, t.forms.text.error),
+  });
 
-export const emailSchema = z.object({
-  to: z.string().email("Geçerli bir e-posta girin"),
-  subject: z.string().optional(),
-  body: z.string().optional(),
-});
+  const vcardSchema = z.object({
+    firstName: z.string().min(1, t.forms.vcard.firstNameError),
+    lastName: z.string().optional(),
+    phone: z.string().optional(),
+    email: z.string().email(t.forms.vcard.emailError).optional().or(z.literal("")),
+    company: z.string().optional(),
+  });
 
-export const smsSchema = z.object({
-  phone: z.string().min(1, "Telefon numarası gerekli"),
-  message: z.string().optional(),
-});
+  const wifiSchema = z.object({
+    ssid: z.string().min(1, t.forms.wifi.ssidError),
+    password: z.string().optional(),
+    security: z.enum(["WPA", "WEP", "nopass"]),
+    hidden: z.boolean(),
+  });
 
-export const telSchema = z.object({
-  phone: z.string().min(1, "Telefon numarası gerekli"),
-});
+  const emailSchema = z.object({
+    to: z.string().email(t.forms.email.toError),
+    subject: z.string().optional(),
+    body: z.string().optional(),
+  });
 
-export const geoSchema = z.object({
-  latitude: z.string().min(1, "Enlem gerekli"),
-  longitude: z.string().min(1, "Boylam gerekli"),
-});
+  const smsSchema = z.object({
+    phone: z.string().min(1, t.forms.sms.phoneError),
+    message: z.string().optional(),
+  });
 
-export const qrSchemas = {
-  url: urlSchema,
-  text: textSchema,
-  vcard: vcardSchema,
-  wifi: wifiSchema,
-  email: emailSchema,
-  sms: smsSchema,
-  tel: telSchema,
-  geo: geoSchema,
-};
+  const telSchema = z.object({
+    phone: z.string().min(1, t.forms.tel.phoneError),
+  });
 
-export type UrlFormValues = z.infer<typeof urlSchema>;
-export type TextFormValues = z.infer<typeof textSchema>;
-export type VcardFormValues = z.infer<typeof vcardSchema>;
-export type WifiFormValues = z.infer<typeof wifiSchema>;
-export type EmailFormValues = z.infer<typeof emailSchema>;
-export type SmsFormValues = z.infer<typeof smsSchema>;
-export type TelFormValues = z.infer<typeof telSchema>;
-export type GeoFormValues = z.infer<typeof geoSchema>;
+  const geoSchema = z.object({
+    latitude: z.string().min(1, t.forms.geo.latitudeError),
+    longitude: z.string().min(1, t.forms.geo.longitudeError),
+  });
+
+  return {
+    url: urlSchema,
+    text: textSchema,
+    vcard: vcardSchema,
+    wifi: wifiSchema,
+    email: emailSchema,
+    sms: smsSchema,
+    tel: telSchema,
+    geo: geoSchema,
+  };
+}
+
+export type QrSchemas = ReturnType<typeof createQrSchemas>;
+export type UrlFormValues = z.infer<QrSchemas["url"]>;
+export type TextFormValues = z.infer<QrSchemas["text"]>;
+export type VcardFormValues = z.infer<QrSchemas["vcard"]>;
+export type WifiFormValues = z.infer<QrSchemas["wifi"]>;
+export type EmailFormValues = z.infer<QrSchemas["email"]>;
+export type SmsFormValues = z.infer<QrSchemas["sms"]>;
+export type TelFormValues = z.infer<QrSchemas["tel"]>;
+export type GeoFormValues = z.infer<QrSchemas["geo"]>;
