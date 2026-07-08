@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ChevronRight, QrCode } from "lucide-react";
+import { ChevronRight, Moon, QrCode, Sun } from "lucide-react";
 
 import { useAuth } from "@/lib/auth/AuthContext";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LANGUAGES, LANGUAGE_LABELS, type Language } from "@/lib/i18n/translations";
 import { isQrType } from "@/lib/qr/types";
+import { useTheme } from "@/lib/theme/ThemeContext";
 
 type Crumb = { label: string; href?: string };
 
@@ -48,6 +49,23 @@ function LanguageSwitcher() {
         </button>
       ))}
     </div>
+  );
+}
+
+function ThemeToggle() {
+  const { t } = useLanguage();
+  const { theme, toggleTheme } = useTheme();
+
+  return (
+    <button
+      type="button"
+      onClick={toggleTheme}
+      aria-label={theme === "dark" ? t.header.lightMode : t.header.darkMode}
+      title={theme === "dark" ? t.header.lightMode : t.header.darkMode}
+      className="rounded-full border border-gray-200 p-1.5 text-gray-500 transition-colors hover:text-indigo-600 dark:border-gray-700 dark:text-gray-400"
+    >
+      {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    </button>
   );
 }
 
@@ -120,6 +138,7 @@ export function Header() {
           )}
           <AuthLinks />
           <LanguageSwitcher />
+          <ThemeToggle />
         </div>
       </div>
     </header>

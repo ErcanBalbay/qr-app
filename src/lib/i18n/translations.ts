@@ -15,6 +15,8 @@ type Translation = {
     login: string;
     history: string;
     logout: string;
+    lightMode: string;
+    darkMode: string;
   };
   home: {
     title: string;
@@ -123,6 +125,8 @@ export const translations: Record<Language, Translation> = {
       login: "Giriş Yap",
       history: "Geçmişim",
       logout: "Çıkış",
+      lightMode: "Açık tema",
+      darkMode: "Koyu tema",
     },
     home: {
       title: "QR Kod Üretici",
@@ -239,6 +243,8 @@ export const translations: Record<Language, Translation> = {
       login: "Log In",
       history: "History",
       logout: "Log Out",
+      lightMode: "Light mode",
+      darkMode: "Dark mode",
     },
     home: {
       title: "QR Code Generator",
