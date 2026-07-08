@@ -8,6 +8,7 @@ import type {
   VcardFormValues,
   WifiFormValues,
 } from "./schemas";
+import type { QrType } from "./types";
 
 // WiFi/vCard alanlarında ayraç olarak kullanılan karakterleri kaçış (escape) yapar.
 function escapeSpecialChars(value: string): string {
@@ -63,4 +64,26 @@ export function buildTelPayload(values: TelFormValues): string {
 
 export function buildGeoPayload(values: GeoFormValues): string {
   return `geo:${values.latitude},${values.longitude}`;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function buildQrPayload(type: QrType, raw: any): string {
+  switch (type) {
+    case "url":
+      return buildUrlPayload(raw);
+    case "text":
+      return buildTextPayload(raw);
+    case "vcard":
+      return buildVcardPayload(raw);
+    case "wifi":
+      return buildWifiPayload(raw);
+    case "email":
+      return buildEmailPayload(raw);
+    case "sms":
+      return buildSmsPayload(raw);
+    case "tel":
+      return buildTelPayload(raw);
+    case "geo":
+      return buildGeoPayload(raw);
+  }
 }

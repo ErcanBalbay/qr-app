@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ChevronRight, QrCode } from "lucide-react";
 
+import { useAuth } from "@/lib/auth/AuthContext";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import { LANGUAGES, LANGUAGE_LABELS, type Language } from "@/lib/i18n/translations";
 import { isQrType } from "@/lib/qr/types";
@@ -50,6 +51,40 @@ function LanguageSwitcher() {
   );
 }
 
+function AuthLinks() {
+  const { t } = useLanguage();
+  const { user, loading, signOut } = useAuth();
+  const router = useRouter();
+
+  if (loading) return null;
+
+  if (!user) {
+    return (
+      <Link href="/login" className="text-sm font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-300">
+        {t.header.login}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="flex items-center gap-3 text-sm">
+      <Link href="/dashboard" className="font-medium text-gray-700 hover:text-indigo-600 dark:text-gray-300">
+        {t.header.history}
+      </Link>
+      <button
+        type="button"
+        onClick={async () => {
+          await signOut();
+          router.push("/");
+        }}
+        className="font-medium text-gray-500 hover:text-indigo-600 dark:text-gray-400"
+      >
+        {t.header.logout}
+      </button>
+    </div>
+  );
+}
+
 export function Header() {
   const pathname = usePathname();
   const { t } = useLanguage();
@@ -83,6 +118,7 @@ export function Header() {
               ))}
             </nav>
           )}
+          <AuthLinks />
           <LanguageSwitcher />
         </div>
       </div>

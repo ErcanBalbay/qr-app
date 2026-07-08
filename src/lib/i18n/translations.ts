@@ -12,11 +12,38 @@ type Translation = {
   header: {
     home: string;
     types: string;
+    login: string;
+    history: string;
+    logout: string;
   };
   home: {
     title: string;
     subtitle: string;
     cta: string;
+  };
+  auth: {
+    title: string;
+    subtitle: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    submit: string;
+    sending: string;
+    checkEmail: string;
+    error: string;
+  };
+  dashboard: {
+    title: string;
+    subtitle: string;
+    empty: string;
+    delete: string;
+    createdAt: string;
+    backToGenerate: string;
+  };
+  save: {
+    button: string;
+    saving: string;
+    saved: string;
+    loginToSave: string;
   };
   generateIndex: {
     title: string;
@@ -83,12 +110,39 @@ export const translations: Record<Language, Translation> = {
     header: {
       home: "Ana Sayfa",
       types: "QR Türleri",
+      login: "Giriş Yap",
+      history: "Geçmişim",
+      logout: "Çıkış",
     },
     home: {
       title: "QR Kod Üretici",
       subtitle:
         "Link, WiFi, kişi kartı ve daha fazlası için saniyeler içinde özelleştirilebilir QR kod oluştur.",
       cta: "QR Kod Oluştur",
+    },
+    auth: {
+      title: "Giriş Yap",
+      subtitle: "E-postana giriş bağlantısı gönderelim, şifre gerekmez.",
+      emailLabel: "E-posta",
+      emailPlaceholder: "sen@ornek.com",
+      submit: "Giriş bağlantısı gönder",
+      sending: "Gönderiliyor...",
+      checkEmail: "E-postana bir giriş bağlantısı gönderdik. Gelen kutunu kontrol et.",
+      error: "Giriş sırasında bir hata oluştu, tekrar dene.",
+    },
+    dashboard: {
+      title: "Geçmişim",
+      subtitle: "Kaydettiğin QR kodları burada bulabilirsin.",
+      empty: "Henüz kaydedilmiş bir QR kodun yok.",
+      delete: "Sil",
+      createdAt: "Oluşturulma",
+      backToGenerate: "QR Kod Oluştur",
+    },
+    save: {
+      button: "Geçmişe Kaydet",
+      saving: "Kaydediliyor...",
+      saved: "Kaydedildi",
+      loginToSave: "Kaydetmek için giriş yap",
     },
     generateIndex: {
       title: "Ne tür bir QR kod oluşturmak istersin?",
@@ -162,12 +216,39 @@ export const translations: Record<Language, Translation> = {
     header: {
       home: "Home",
       types: "QR Types",
+      login: "Log In",
+      history: "History",
+      logout: "Log Out",
     },
     home: {
       title: "QR Code Generator",
       subtitle:
         "Create customizable QR codes in seconds for links, WiFi, contact cards, and more.",
       cta: "Create a QR Code",
+    },
+    auth: {
+      title: "Log In",
+      subtitle: "We'll send a login link to your email, no password needed.",
+      emailLabel: "Email",
+      emailPlaceholder: "you@example.com",
+      submit: "Send login link",
+      sending: "Sending...",
+      checkEmail: "We sent a login link to your email. Check your inbox.",
+      error: "Something went wrong signing in, please try again.",
+    },
+    dashboard: {
+      title: "History",
+      subtitle: "Find the QR codes you've saved here.",
+      empty: "You haven't saved any QR codes yet.",
+      delete: "Delete",
+      createdAt: "Created",
+      backToGenerate: "Create a QR Code",
+    },
+    save: {
+      button: "Save to History",
+      saving: "Saving...",
+      saved: "Saved",
+      loginToSave: "Log in to save",
     },
     generateIndex: {
       title: "What kind of QR code do you want to create?",

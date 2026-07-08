@@ -4,16 +4,7 @@ import { useMemo } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import {
-  buildEmailPayload,
-  buildGeoPayload,
-  buildSmsPayload,
-  buildTelPayload,
-  buildTextPayload,
-  buildUrlPayload,
-  buildVcardPayload,
-  buildWifiPayload,
-} from "@/lib/qr/builders";
+import { buildQrPayload } from "@/lib/qr/builders";
 import { useLanguage } from "@/lib/i18n/LanguageContext";
 import type { Language, translations } from "@/lib/i18n/translations";
 import { createQrSchemas } from "@/lib/qr/schemas";
@@ -23,7 +14,8 @@ type Translation = (typeof translations)[Language];
 
 type GeneratorFormProps = {
   type: QrType;
-  onDataChange: (data: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onDataChange: (data: string, raw: any) => void;
 };
 
 const fieldClass =
@@ -47,10 +39,10 @@ export function GeneratorForm({ type, onDataChange }: GeneratorFormProps) {
   function submitAndBuild() {
     const parsed = schema.safeParse(values);
     if (!parsed.success) {
-      onDataChange("");
+      onDataChange("", null);
       return;
     }
-    onDataChange(buildPayload(type, parsed.data));
+    onDataChange(buildQrPayload(type, parsed.data), parsed.data);
   }
 
   return (
@@ -79,28 +71,6 @@ function getDefaultValues(type: QrType) {
       return { latitude: "", longitude: "" };
     default:
       return {};
-  }
-}
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function buildPayload(type: QrType, data: any): string {
-  switch (type) {
-    case "url":
-      return buildUrlPayload(data);
-    case "text":
-      return buildTextPayload(data);
-    case "vcard":
-      return buildVcardPayload(data);
-    case "wifi":
-      return buildWifiPayload(data);
-    case "email":
-      return buildEmailPayload(data);
-    case "sms":
-      return buildSmsPayload(data);
-    case "tel":
-      return buildTelPayload(data);
-    case "geo":
-      return buildGeoPayload(data);
   }
 }
 
