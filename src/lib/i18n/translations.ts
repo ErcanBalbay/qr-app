@@ -38,12 +38,22 @@ type Translation = {
     delete: string;
     createdAt: string;
     backToGenerate: string;
+    makeDynamic: string;
+    shortLink: string;
+    copyLink: string;
+    copied: string;
+    scans: (count: number) => string;
+    targetUrlLabel: string;
+    updateTarget: string;
+    updated: string;
   };
   save: {
     button: string;
     saving: string;
     saved: string;
     loginToSave: string;
+    saveAsDynamic: string;
+    dynamicHint: string;
   };
   generateIndex: {
     title: string;
@@ -137,12 +147,22 @@ export const translations: Record<Language, Translation> = {
       delete: "Sil",
       createdAt: "Oluşturulma",
       backToGenerate: "QR Kod Oluştur",
+      makeDynamic: "Dinamik Yap",
+      shortLink: "Kısa link",
+      copyLink: "Kopyala",
+      copied: "Kopyalandı",
+      scans: (count) => `${count} tarama`,
+      targetUrlLabel: "Hedef URL",
+      updateTarget: "Güncelle",
+      updated: "Güncellendi",
     },
     save: {
       button: "Geçmişe Kaydet",
       saving: "Kaydediliyor...",
       saved: "Kaydedildi",
       loginToSave: "Kaydetmek için giriş yap",
+      saveAsDynamic: "Dinamik olarak kaydet",
+      dynamicHint: "Hedef adresi sonradan değiştirebilir, taranma sayısını görebilirsin.",
     },
     generateIndex: {
       title: "Ne tür bir QR kod oluşturmak istersin?",
@@ -243,12 +263,22 @@ export const translations: Record<Language, Translation> = {
       delete: "Delete",
       createdAt: "Created",
       backToGenerate: "Create a QR Code",
+      makeDynamic: "Make Dynamic",
+      shortLink: "Short link",
+      copyLink: "Copy",
+      copied: "Copied",
+      scans: (count) => `${count} scan${count === 1 ? "" : "s"}`,
+      targetUrlLabel: "Target URL",
+      updateTarget: "Update",
+      updated: "Updated",
     },
     save: {
       button: "Save to History",
       saving: "Saving...",
       saved: "Saved",
       loginToSave: "Log in to save",
+      saveAsDynamic: "Save as dynamic",
+      dynamicHint: "You can change the target address later and see the scan count.",
     },
     generateIndex: {
       title: "What kind of QR code do you want to create?",
